@@ -43,7 +43,7 @@
  *    only uppercase letters.
  *
  * 4. General prefix
- *    Find `upm` and replace with something unique to your plugin name. Use
+ *    Find `ubm__` and replace with something unique to your plugin name. Use
  *    only lowercase letters. This will change the prefix of all filters and
  *    settings, and the prefix of functions outside of a class.
  *
@@ -185,6 +185,36 @@ if ( ! class_exists( 'Migrate' ) ) :
 				define( 'UBM_ADMIN_SLUG', 'unbranded' );
 			}
 
+			/**
+			 * Current management system
+			 *
+			 * @since  1.0.0
+			 * @return string Returns the name of the current management system.
+			 */
+			if ( ! defined( 'UBM_CURRENT' ) ) {
+
+				// If ClassicPress is the current management system.
+				if ( function_exists( 'classicpress_version' ) ) {
+					define( 'UBM_CURRENT', 'ClassicPress' );
+
+				// If calmPress is the current management system.
+				} elseif ( defined( 'ABSPATH' ) && file_exists( ABSPATH . 'wp-includes/calmpress/autoloader.php' ) ) {
+					define( 'UBM_CURRENT', 'calmPress' );
+
+				// Check for an "unbranded" or white-labeled management system.
+				} elseif ( defined( 'ABSPATH' ) && defined( 'APP_NAME' ) ) {
+					define( 'UBM_CURRENT', APP_NAME );
+
+				// Presume that WordPress is the current management system.
+				} elseif ( defined( 'ABSPATH' ) ) {
+					define( 'UBM_CURRENT', 'WordPress' );
+
+				// Otherwise leave empty.
+				} else {
+					define( 'UBM_CURRENT', '' );
+				}
+			}
+
 		}
 
 		/**
@@ -245,20 +275,20 @@ if ( ! class_exists( 'Migrate' ) ) :
 	 * @access public
 	 * @return object Returns the instance of the `Migrate` class.
 	 */
-	function upm_plugin() {
+	function ubm_plugin() {
 
 		return Migrate::instance();
 
 	}
 
 	// Begin plugin functionality.
-	upm_plugin();
+	ubm_plugin();
 
 // End the check for the plugin class.
 endif;
 
 // Bail out now if the core class was not run.
-if ( ! function_exists( 'upm_plugin' ) ) {
+if ( ! function_exists( 'ubm_plugin' ) ) {
 	return;
 }
 
@@ -269,8 +299,8 @@ if ( ! function_exists( 'upm_plugin' ) ) {
  * @access public
  * @return void
  */
-register_activation_hook( __FILE__, '\upm_activate_plugin' );
-register_deactivation_hook( __FILE__, '\upm_deactivate_plugin' );
+register_activation_hook( __FILE__, '\ubm_activate_plugin' );
+register_deactivation_hook( __FILE__, '\ubm_deactivate_plugin' );
 
 /**
  * The code that runs during plugin activation.
@@ -279,10 +309,10 @@ register_deactivation_hook( __FILE__, '\upm_deactivate_plugin' );
  * @access public
  * @return void
  */
-function upm_activate_plugin() {
+function ubm_activate_plugin() {
 
 	// Run the activation class.
-	upm_activate();
+	ubm_activate();
 
 }
 
@@ -293,43 +323,9 @@ function upm_activate_plugin() {
  * @access public
  * @return void
  */
-function upm_deactivate_plugin() {
+function ubm_deactivate_plugin() {
 
 	// Run the deactivation class.
-	upm_deactivate();
-
-}
-
-/**
- * Check for Advanced Custom Fields.
- *
- * @since  1.0.0
- * @access public
- * @return bool Returns true if the ACF free or Pro plugin is active.
- */
-function upm_acf() {
-
-	if ( class_exists( 'acf' ) ) {
-		return true;
-	} else {
-		return false;
-	}
-
-}
-
-/**
- * Check for Advanced Custom Fields Pro.
- *
- * @since  1.0.0
- * @access public
- * @return bool Returns true if the ACF Pro plugin is active.
- */
-function upm_acf_pro() {
-
-	if ( class_exists( 'acf_pro' ) ) {
-		return true;
-	} else {
-		return false;
-	}
+	ubm_deactivate();
 
 }

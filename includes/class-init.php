@@ -72,6 +72,9 @@ final class Init {
 	 */
 	private function dependencies() {
 
+		// Switch.
+		require_once UBM_PATH . 'includes/switch.php';
+
 		// Plugin settings class.
 		require_once UBM_PATH . 'includes/class-settings.php';
 
